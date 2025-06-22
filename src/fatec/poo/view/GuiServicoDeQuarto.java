@@ -111,7 +111,7 @@ public class GuiServicoDeQuarto extends javax.swing.JFrame {
                             .addComponent(txtCodigo)
                             .addComponent(cbDescricao, 0, 104, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnInserir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -151,6 +151,7 @@ public class GuiServicoDeQuarto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void limparCampos() { //método auxiliar
+        txtCodigo.setText("");
         txtValor.setText(null);
         cbDescricao.setSelectedIndex(0);
         txtCodigo.setEnabled(true);

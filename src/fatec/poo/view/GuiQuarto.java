@@ -142,9 +142,9 @@ public class GuiQuarto extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(4, 4, 4)
-                        .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                        .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -266,15 +266,11 @@ public class GuiQuarto extends javax.swing.JFrame {
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
         if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0) {
-            String tipo = rdbSolteiro.isSelected() ? "S" : "C";
-
-            quarto = new Quarto(
-                Integer.parseInt(txtNQuarto.getText()),
-                tipo,
-                Double.parseDouble(txtValorDiaria.getText())
-            );
-
+            quarto.setTipo(rdbSolteiro.isSelected() ? "S" : "C");
+            quarto.setValorDiaria(Double.parseDouble(txtValorDiaria.getText()));
             daoQuarto.alterar(quarto);
+            
+            //alterado conforme as correções do prof, adicionando os sets de tipo e valorDiaria pra nao reutilizar o construtor
         }
         limparCampos();
     }//GEN-LAST:event_btnAlterarActionPerformed

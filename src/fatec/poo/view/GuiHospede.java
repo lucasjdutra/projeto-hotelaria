@@ -131,7 +131,7 @@ public class GuiHospede extends javax.swing.JFrame {
                 .addGap(65, 65, 65))
             .addGroup(layout.createSequentialGroup()
                 .addGap(133, 133, 133)
-                .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnInserir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -178,24 +178,106 @@ public class GuiHospede extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void limparCampos() { // método auxiliar
+        txtCpf.setText(null);
+        txtNome.setText(null);
+        txtEndereco.setText(null);
+        txtTelefone.setText(null);
+        txtTxDesconto.setText(null);
+
+        txtCpf.setEnabled(true);
+        txtNome.setEnabled(false);
+        txtEndereco.setEnabled(false);
+        txtTelefone.setEnabled(false);
+        txtTxDesconto.setEnabled(false);
+
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+
+        txtCpf.requestFocus();
+    }
+    
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         dispose();
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-        // TODO add your handling code here:
+        String cpf = txtCpf.getText().replaceAll("[^\\d]", ""); // // remove qualquer caractere que não seja número
+
+        if (!Hospede.validarCPF(cpf)) {
+            JOptionPane.showMessageDialog(this, "CPF inválido", "Aviso", JOptionPane.WARNING_MESSAGE);
+            txtCpf.requestFocus();
+            return;
+        }
+
+        hospede = daoHospede.consultar(cpf);
+
+        if (hospede != null) {
+            txtNome.setText(hospede.getNome());
+            txtEndereco.setText(hospede.getEndereco());
+            txtTelefone.setText(hospede.getTelefone());
+            txtTxDesconto.setText(String.valueOf(hospede.getTaxaDesconto()));
+
+            txtCpf.setEnabled(false);
+            txtNome.setEnabled(true);
+            txtEndereco.setEnabled(true);
+            txtTelefone.setEnabled(true);
+            txtTxDesconto.setEnabled(true);
+
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(false);
+            btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+
+            txtNome.requestFocus();
+        } else {
+            txtCpf.setEnabled(false);
+            txtNome.setEnabled(true);
+            txtEndereco.setEnabled(true);
+            txtTelefone.setEnabled(true);
+            txtTxDesconto.setEnabled(true);
+
+            btnConsultar.setEnabled(false);
+            btnInserir.setEnabled(true);
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+
+            txtNome.requestFocus();
+        }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
-        // TODO add your handling code here:
+        hospede = new Hospede(txtNome.getText(), txtCpf.getText().replaceAll("[^\\d]", ""));
+        
+        hospede.setEndereco(txtEndereco.getText());
+        hospede.setTelefone(txtTelefone.getText());
+        hospede.setTaxaDesconto(Double.parseDouble(txtTxDesconto.getText()));
+
+        daoHospede.inserir(hospede);
+        limparCampos();
     }//GEN-LAST:event_btnInserirActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(this, "Confirma Alteração?") == 0) {
+            hospede.setNome(txtNome.getText());
+            hospede.setEndereco(txtEndereco.getText());
+            hospede.setTelefone(txtTelefone.getText());
+            hospede.setTaxaDesconto(Double.parseDouble(txtTxDesconto.getText()));
+
+            daoHospede.alterar(hospede);
+        }
+
+        limparCampos();
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        if (JOptionPane.showConfirmDialog(this, "Confirma Exclusão?") == 0) {
+            daoHospede.excluir(hospede);
+        }
+
+        limparCampos();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -232,3 +314,11 @@ public class GuiHospede extends javax.swing.JFrame {
     private Hospede hospede = null;
     private PreparaConexao prepCon = null;
 }
+
+/* alguns CPFs validos para teste
+123.456.789-09
+987.654.321-00
+390.533.447-05
+234.567.654-06
+321.654.987-00
+*/

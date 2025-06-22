@@ -56,4 +56,14 @@ public class Quarto {
     public void setSituacao(boolean situacao) {
         this.situacao = situacao;
     }
+
+    public void setValorDiaria(double valorDiaria) {
+        this.valorDiaria = valorDiaria;
+    } 
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    
+    
 }

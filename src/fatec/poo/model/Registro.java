@@ -66,7 +66,6 @@ public class Registro {
     }
     public void setHospede(Hospede hospede){
         this.hospede = hospede;
-        hospede.adicionarRegistro(this);
     }
     public void setQuarto(Quarto quarto) {
         this.quarto = quarto;
@@ -82,5 +81,9 @@ public class Registro {
 
     public Quarto getQuarto() {
         return quarto;
+    }
+
+    public void setValorHospedagem(double valorHospedagem) {
+        this.valorHospedagem = valorHospedagem;
     }
 }    
