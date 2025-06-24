@@ -25,7 +25,9 @@ public class Recepcionista extends Pessoa {
         return turno;
     }
     public void adicionarRegistro(Registro registro){
-    registros.add(registro);
-    registro.setRecepcionista(this);
+        if (!registros.contains(registro)) {
+            registros.add(registro);
+            registro.setRecepcionista(this);
+        }
     }
 }

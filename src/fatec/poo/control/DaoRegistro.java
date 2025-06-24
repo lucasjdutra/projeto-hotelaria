@@ -4,10 +4,12 @@ import fatec.poo.model.Registro;
 import fatec.poo.model.Recepcionista;
 import fatec.poo.model.Hospede;
 import fatec.poo.model.Quarto;
+import fatec.poo.model.ServicoQuarto;
 
 import fatec.poo.control.DaoRecepcionista;
 import fatec.poo.control.DaoHospede;
 import fatec.poo.control.DaoQuarto;
+import fatec.poo.control.DaoServicoQuarto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,17 +43,16 @@ public class DaoRegistro {
                 DaoRecepcionista daoRecep = new DaoRecepcionista(conn);
                 DaoHospede daoHosp = new DaoHospede(conn);
                 DaoQuarto daoQuarto = new DaoQuarto(conn);
+                DaoServicoQuarto daoServico = new DaoServicoQuarto(conn);
                 
                 //instanciando objetos Recepcionista, Hospede e Quarto pra usar na consulta
                 Recepcionista objRecep = daoRecep.consultar(rs.getInt("RegFuncRecep_Registro"));
                 Hospede objHosp = daoHosp.consultar(rs.getString("CpfHospede_Registro"));
                 Quarto objQuarto = daoQuarto.consultar(rs.getInt("NumeroQuarto_Registro"));
                 
-                //conversão de data pra localdate
-                LocalDate dataEntrada = rs.getDate("DataEntrada_Registro").toLocalDate();
-                
+                //instanciando o registro
                 objRegistro = new Registro(rs.getInt("Codigo_Registro"), 
-                        rs.getDate("DataEntrada_Registro").toLocalDate(), 
+                        rs.getDate("DataEntrada_Registro").toLocalDate(), //conversão de data pra localdate
                         objRecep
                 );
                 objRegistro.setHospede(objHosp);
@@ -60,10 +61,24 @@ public class DaoRegistro {
                //conversão de data pra localdate (se houver saída)
                 Date dataSaida = rs.getDate("DataSaida_Registro");
                 if (dataSaida != null) {
-                objRegistro.setDataSaida(dataSaida.toLocalDate());
+                    objRegistro.setDataSaida(dataSaida.toLocalDate());
                 }
                 
                 objRegistro.setValorHospedagem(rs.getDouble("ValorHospedagem_Registro"));
+                
+                //crio um novo preparedstatement e resultset pra executar query numa tabela diferente (sem sobrescrever a outra)
+                PreparedStatement psServicos = conn.prepareStatement("SELECT CodigoServQuarto_LS FROM tblListaServico WHERE CodigoRegistro_LS = ?");
+                psServicos.setInt(1, codigo);
+                ResultSet rsServicos = psServicos.executeQuery();
+                
+                while (rsServicos.next()) {
+                    int codServico = rsServicos.getInt("CodigoServQuarto_LS"); //puxo o codigo do serviço numa variavel pra ficar legivel
+                    ServicoQuarto servico = daoServico.consultar(codServico); //retorna um objeto serviço
+                    if(servico != null) {
+                        objRegistro.adicionarServicoQuarto(servico);
+                    }
+                }
+                
             }   
         } catch (SQLException ex) {
             System.out.println(ex.toString());

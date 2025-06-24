@@ -1,7 +1,5 @@
 package fatec.poo.model;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Lucas/Murilo
